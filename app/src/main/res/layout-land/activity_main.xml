@@ -150,7 +150,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
     <TextView
-        android:id="@+id/edit_scale"
+        android:id="@+id/text_scale"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
