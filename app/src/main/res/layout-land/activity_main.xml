@@ -75,11 +75,12 @@
         android:id="@+id/label_x"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/x_label"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/label_y"
-        app:layout_constraintEnd_toEndOf="@+id/label_y" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/label_y"
@@ -88,8 +89,8 @@
         android:layout_marginBottom="8dp"
         android:text="@string/y_label"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/label_width"
-        app:layout_constraintEnd_toEndOf="@+id/label_width" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/label_x" />
 
     <TextView
         android:id="@+id/label_alpha"
@@ -103,9 +104,10 @@
 
     <TextView
         android:id="@+id/text_translation_x"
-        android:layout_width="0dp"
+        android:layout_width="185dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="8888 px"
         app:layout_constraintBaseline_toBaselineOf="@+id/label_x"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -114,9 +116,10 @@
 
     <TextView
         android:id="@+id/text_translation_y"
-        android:layout_width="0dp"
+        android:layout_width="185dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="8888 px"
         app:layout_constraintBaseline_toBaselineOf="@+id/label_y"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -125,11 +128,13 @@
 
     <TextView
         android:id="@+id/text_alpha"
-        android:layout_width="134dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="100 %"
         app:layout_constraintBaseline_toBaselineOf="@+id/label_alpha"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toEndOf="@+id/label_alpha"
         tools:text="100 %" />
 
@@ -137,19 +142,22 @@
         android:id="@+id/label_scale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/scale_label"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/label_status"
-        app:layout_constraintEnd_toEndOf="@+id/label_status" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
     <TextView
         android:id="@+id/edit_scale"
-        android:layout_width="141dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="2.0 x"
         app:layout_constraintBaseline_toBaselineOf="@+id/label_scale"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toEndOf="@+id/label_scale"
         tools:text="2.0 x" />
 
@@ -158,27 +166,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.50752395" />
+        app:layout_constraintGuide_percent="0.33" />
 
     <TextView
         android:id="@+id/label_width"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/width_label"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/label_status"
+        app:layout_constraintEnd_toEndOf="@+id/label_status" />
 
     <TextView
         android:id="@+id/text_width"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="1000 px"
         app:layout_constraintBaseline_toBaselineOf="@+id/label_width"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/label_width"
         tools:text="1000 px" />
 
@@ -191,13 +199,14 @@
         android:text="@string/status_label"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline2" />
+        app:layout_constraintStart_toStartOf="@+id/guideline" />
 
     <TextView
         android:id="@+id/text_status"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="STATIONARY"
         app:layout_constraintBaseline_toBaselineOf="@+id/label_status"
         app:layout_constraintEnd_toEndOf="parent"
@@ -228,5 +237,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.66484267" />
 
 </android.support.constraint.ConstraintLayout>
