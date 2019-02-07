@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Animate The Box</string>
+    <string name="translate_x">Translate X</string>
+    <string name="translate_y">Translate Y</string>
+    <string name="scale">Scale</string>
+    <string name="alpha">Alpha</string>
+    <string name="rotate">Rotate</string>
+    <string name="x_label">X:</string>
+    <string name="y_label">Y:</string>
+    <string name="alpha_label">Alpha:</string>
+    <string name="scale_label">Scale:</string>
+    <string name="width_label">Width:</string>
+    <string name="status_label">Status:</string>
+</resources>
