@@ -82,7 +82,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_alpha" />
 
-    <View
+    <com.androiddesigntricks.animatethebox.BoxView
         android:id="@+id/view_box"
         android:layout_width="100dp"
         android:layout_height="100dp"
