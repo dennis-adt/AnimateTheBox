@@ -1,6 +1,7 @@
 package com.androiddesigntricks.animatethebox;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.androiddesigntricks.animatethebox.BoxView.BoxStatus;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int DURATION = 1000;
 
     ConstraintLayout parentLayout;
 
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         textStatus = findViewById(R.id.text_status);
 
         boxView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onGlobalLayout() {
                 boxView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -64,13 +68,21 @@ public class MainActivity extends AppCompatActivity {
                 textAlpha.setText(String.format("%d%%", boxView.getAlphaAsPercent()));
                 textScale.setText(String.format("%.1f x", boxView.getScale()));
 
-                boxView.calcMaxXTranslation(parentLayout);
+                boxView.calcXTranslationPoints(parentLayout);
             }
         });
     }
 
     public void onTranslateXClicked(View view) {
+        float moveToX = boxView.moveToX();
+        boxView.setBoxStatus(BoxStatus.MOVING_X);
 
+        boxView.animate()
+                .setDuration(DURATION)
+                .withStartAction(animateStartAction())
+                .x(moveToX)
+                .setUpdateListener(animateUpdate())
+                .withEndAction(animateEndAction());
     }
 
     public void onTranslateYClicked(View view) {
@@ -89,11 +101,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public Runnable animateStartAction(final BoxStatus boxStatus) {
+    public Runnable animateStartAction() {
         return new Runnable() {
             @Override
             public void run() {
-                textStatus.setText(boxStatus.name());
+                textStatus.setText(boxView.getBoxStatusName());
             }
         };
     }
@@ -102,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
         return new Runnable() {
             @Override
             public void run() {
-                textStatus.setText(BoxStatus.STATIONARY.name());
+                boxView.setBoxStatus(BoxStatus.STATIONARY);
+                textStatus.setText(boxView.getBoxStatusName());
             }
         };
     }
