@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.androiddesigntricks.animatethebox.BoxView.BoxStatus;
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTranslateXClicked(View view) {
-        float moveToX = boxView.getXToMove();
+        float moveToX = boxView.getNextXTranslation();
         boxView.setBoxStatus(BoxStatus.MOVING_X);
 
         boxView.animate()
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTranslateYClicked(View view) {
-        float moveToY = boxView.getYToMove();
+        float moveToY = boxView.getNextYTranslation();
 
         boxView.setBoxStatus(BoxStatus.MOVING_Y);
 
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         float scaleFactor = boxView.getFactorToScale();
 
         textScale.setText(String.format("%2.1fx", boxView.getScaleFactor()));
-        textWidth.setText(String.format("%d px", boxView.getScaleWidth()));
+        textWidth.setText(String.format("%d px", boxView.getScaledWidth()));
 
         boxView.setBoxStatus(BoxStatus.SCALING);
 

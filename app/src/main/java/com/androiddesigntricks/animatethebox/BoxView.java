@@ -19,7 +19,6 @@ import android.view.ViewGroup.MarginLayoutParams;
  * pass this information into your own {@link android.view.ViewPropertyAnimator} methods on the Activity
  * or Fragment.
  * </p>
- *
  */
 public class BoxView extends View {
 
@@ -137,7 +136,7 @@ public class BoxView extends View {
         int parentWidth = parentLayout.getWidth();
         int paddingLeft = parentLayout.getPaddingLeft();
         int paddingRight = parentLayout.getPaddingRight();
-        int boxWidth = getWidth();
+        int boxWidth = getScaledWidth();
 
         maxXTranslation = parentWidth - boxWidth - paddingLeft - paddingRight;
         midXTranslation = maxXTranslation / 2;
@@ -149,8 +148,8 @@ public class BoxView extends View {
      * layout when considering the height of the box, along with two views that act as barriers for
      * the minimum and maximum amount the box is able to translate in the y-axis.
      *
-     * @param topBarrier - The view that borders the highest point on the screen the box can translate
-     *                     in the y-axis
+     * @param topBarrier    - The view that borders the highest point on the screen the box can translate
+     *                      in the y-axis
      * @param bottomBarrier - The view that borders the lowest point on the screen the box can translate
      *                      in the y-axis
      */
@@ -159,7 +158,7 @@ public class BoxView extends View {
         int bottomBarrierY = (int) bottomBarrier.getY();
 
         int topBarrierHeight = topBarrier.getHeight();
-        int boxHeight = getHeight();
+        int boxHeight = getScaledHeight();
 
         MarginLayoutParams topLayoutParams = (MarginLayoutParams) topBarrier.getLayoutParams();
         MarginLayoutParams bottomLayoutParams = (MarginLayoutParams) bottomBarrier.getLayoutParams();
@@ -178,7 +177,7 @@ public class BoxView extends View {
      *
      * @return The translation point in pixels the box should move to inside the layout along the x-axis
      */
-    public float getXToMove() {
+    public float getNextXTranslation() {
         float moveToX = 0;
 
         switch (curXTranslationPoint) {
@@ -211,7 +210,7 @@ public class BoxView extends View {
      *
      * @return The translation point in pixels the box should move to inside the layout along the y-axis
      */
-    public float getYToMove() {
+    public float getNextYTranslation() {
         float moveToY = 0;
 
         switch (curYTranslationPoint) {
@@ -299,22 +298,65 @@ public class BoxView extends View {
         return rotationAngle;
     }
 
+    /**
+     * Get the current status of the box.
+     *
+     * @return The current status of the box as a string.
+     */
     public String getBoxStatusName() {
         return boxStatus.name();
     }
 
-    public int getScaleWidth() {
-        return (int) (getWidth() * scaleFactor);
+    /**
+     * Get the current status of the box.
+     *
+     * @return The current status of the box as an enum BoxStatus value.
+     */
+    public BoxStatus getBoxStatus() {
+        return boxStatus;
     }
 
+    /**
+     * Set the BoxStatus for the box.
+     *
+     * @param boxStatus Enum value for BoxStatus
+     */
     public void setBoxStatus(BoxStatus boxStatus) {
         this.boxStatus = boxStatus;
     }
 
+    /**
+     * The width of the box with scaling taken into factor.
+     *
+     * @return The width of the box with scaling taken into factor.
+     */
+    public int getScaledWidth() {
+        return (int) (getWidth() * scaleFactor);
+    }
+
+    /**
+     * The height of the box with scaling taken into factor.
+     *
+     * @return The height of the box with scaling taken into factor.
+     */
+    public int getScaledHeight() {
+        return (int) (getHeight() * scaleFactor);
+    }
+
+    /**
+     * Get the alpha value as a percentage.
+     *
+     * @return A numerical value representing the View's current alpha as a percentage.
+     */
     public int getAlphaAsPercent() {
         return (int) (alphaFactor * 100);
     }
 
+    /**
+     * Get the scaling factor of the box.
+     *
+     * @return The scaling factor of the box.
+     */
     public float getScaleFactor() {
         return scaleFactor;
     }
