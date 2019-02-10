@@ -14,15 +14,10 @@ import com.androiddesigntricks.animatethebox.BoxView.BoxStatus;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int DURATION = 1000;
+    private static int DURATION = 1000;
 
     ConstraintLayout parentLayout;
 
-    private Button buttonTranslateX;
-    private Button buttonTranslateY;
-    private Button buttonScale;
-    private Button buttonAlpha;
-    private Button buttonRotation;
     private View dividerTop;
     private View dividerBottom;
     private BoxView boxView;
@@ -39,11 +34,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         parentLayout = findViewById(R.id.container);
-        buttonTranslateX = findViewById(R.id.button_translate_x);
-        buttonTranslateY = findViewById(R.id.button_translate_y);
-        buttonScale = findViewById(R.id.button_scale);
-        buttonAlpha = findViewById(R.id.button_alpha);
-        buttonRotation = findViewById(R.id.button_rotation);
         dividerTop = findViewById(R.id.divider_top);
         dividerBottom = findViewById(R.id.divider_bottom);
         boxView = findViewById(R.id.view_box);
@@ -108,10 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
         boxView.setBoxStatus(BoxStatus.SCALING);
 
-        // We'll need to recalculate our translation points since the size of the box has been updated.
-        //boxView.calcXTranslationPoints(parentLayout);
-        //boxView.calcYTranslationPoints(dividerTop, dividerBottom);
-
         boxView.animate()
                 .setDuration(DURATION)
                 .withStartAction(animateStartAction())
@@ -125,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     public void onAlphaClicked(View view) {
         float alphaFactor = boxView.getAlphaToChange();
 
+        boxView.setBoxStatus(BoxStatus.ALPHA);
         textAlpha.setText(String.format("%d%%", boxView.getAlphaAsPercent()));
 
         boxView.animate()
@@ -137,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onRotationClicked(View view) {
         float rotationAngle = boxView.getAngleToRotate();
+
+        boxView.setBoxStatus(BoxStatus.ROTATING);
 
         boxView.animate()
                 .setDuration(DURATION)

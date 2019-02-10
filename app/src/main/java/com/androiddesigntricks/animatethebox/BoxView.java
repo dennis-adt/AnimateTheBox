@@ -6,6 +6,21 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 
+/**
+ * <p>
+ * This class is a custom view derived from the basic {@link View} class that can be used to manage
+ * details for simple animations in Android with the {@link android.view.ViewPropertyAnimator} class.
+ * </p>
+ *
+ * <p>
+ * <em>Note: </em> This class does not take care of the animations themselves. This class only manages
+ * the attributes used for the animations such as what x-coord the box should translate to, or what
+ * alpha level the transparency should be modified. To complete the animation, you will still need to
+ * pass this information into your own {@link android.view.ViewPropertyAnimator} methods on the Activity
+ * or Fragment.
+ * </p>
+ *
+ */
 public class BoxView extends View {
 
     private static final String TAG = "BoxView";
@@ -34,12 +49,9 @@ public class BoxView extends View {
     private int midYTranslation = 0;
     private int maxYTranslation = 0;
 
-    private float alpha = 1.0f;
+    private float alphaFactor = 1.0f;
     private float scaleFactor = SCALE_NORMAL;
 
-    // We start off with our box in the center of the stage. The initial direction of movement
-    // will be towards the right side of the stage for the x-axis, and towards the bottom of the stage
-    // in the y-axis.
     private int prevXTranslationPoint;
     private int prevYTranslationPoint;
     private int curXTranslationPoint;
@@ -88,14 +100,6 @@ public class BoxView extends View {
         isRotationClockwise = false;
     }
 
-    public int getScaleWidth() {
-        return (int) (getWidth() * scaleFactor);
-    }
-
-    public int getScaleHeight() {
-        return (int) (getHeight() * scaleFactor);
-    }
-
     /**
      * Returns the absolute x-coord of the BoxView top left corner in number of pixels from the
      * left side of the screen.
@@ -140,6 +144,16 @@ public class BoxView extends View {
         minXTranslation = paddingLeft;
     }
 
+    /**
+     * Calculate the maximum amount of translation the box is allowed to move inside the parent
+     * layout when considering the height of the box, along with two views that act as barriers for
+     * the minimum and maximum amount the box is able to translate in the y-axis.
+     *
+     * @param topBarrier - The view that borders the highest point on the screen the box can translate
+     *                     in the y-axis
+     * @param bottomBarrier - The view that borders the lowest point on the screen the box can translate
+     *                      in the y-axis
+     */
     public void calcYTranslationPoints(View topBarrier, View bottomBarrier) {
         int topBarrierY = (int) topBarrier.getY();
         int bottomBarrierY = (int) bottomBarrier.getY();
@@ -159,8 +173,8 @@ public class BoxView extends View {
     }
 
     /**
-     * Set the x-coord the box should move to inside the layout based on its current position and its
-     * previous position.
+     * Set and return the x-coord the box should move to inside the layout based on its current
+     * position and its previous position.
      *
      * @return The translation point in pixels the box should move to inside the layout along the x-axis
      */
@@ -191,6 +205,12 @@ public class BoxView extends View {
         return moveToX;
     }
 
+    /**
+     * Set and return the y-coord the box should move to inside the layout based on its current
+     * position and its previous position.
+     *
+     * @return The translation point in pixels the box should move to inside the layout along the y-axis
+     */
     public float getYToMove() {
         float moveToY = 0;
 
@@ -218,7 +238,11 @@ public class BoxView extends View {
         return moveToY;
     }
 
-
+    /**
+     * Set and return the scaling factor for the box.
+     *
+     * @return The scaleFactor of the box.
+     */
     public float getFactorToScale() {
 
         if (currScalePoint == SCALE_SMALL) {
@@ -238,35 +262,49 @@ public class BoxView extends View {
         return scaleFactor;
     }
 
+    /**
+     * Set and return the alphaFactor factor for the box.
+     *
+     * @return The alphaFactor of the box.
+     */
     public float getAlphaToChange() {
 
         if (isAlphaTransparent) {
-            alpha = ALPHA_OPAQUE;
+            alphaFactor = ALPHA_OPAQUE;
         } else {
-            alpha = ALPHA_TRANSPARENT;
+            alphaFactor = ALPHA_TRANSPARENT;
         }
 
         isAlphaTransparent = !isAlphaTransparent;
 
-        return alpha;
+        return alphaFactor;
     }
 
+    /**
+     * Set and return the angle to which the box must rotate.
+     *
+     * @return The scaleFactor of the box.
+     */
     public float getAngleToRotate() {
-        float rotation;
+        float rotationAngle;
 
         if (isRotationClockwise) {
-            rotation = ROTATION_COUNTER_CLOCKWISE;
+            rotationAngle = ROTATION_COUNTER_CLOCKWISE;
         } else {
-            rotation = ROTATION_CLOCKWISE;
+            rotationAngle = ROTATION_CLOCKWISE;
         }
 
         isRotationClockwise = !isRotationClockwise;
 
-        return rotation;
+        return rotationAngle;
     }
 
     public String getBoxStatusName() {
         return boxStatus.name();
+    }
+
+    public int getScaleWidth() {
+        return (int) (getWidth() * scaleFactor);
     }
 
     public void setBoxStatus(BoxStatus boxStatus) {
@@ -274,7 +312,7 @@ public class BoxView extends View {
     }
 
     public int getAlphaAsPercent() {
-        return (int) (alpha * 100);
+        return (int) (alphaFactor * 100);
     }
 
     public float getScaleFactor() {
