@@ -13,48 +13,48 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:onClick="onTranslateXClicked"
         android:text="@string/translate_x"
         app:layout_constraintEnd_toStartOf="@+id/button_translate_y"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="onTranslateXClicked"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_scale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:onClick="onScaleClicked"
         android:text="@string/scale"
         app:layout_constraintEnd_toStartOf="@+id/button_alpha"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_translate_x"
-        android:onClick="onScaleClicked"/>
+        app:layout_constraintTop_toBottomOf="@+id/button_translate_x" />
 
     <Button
         android:id="@+id/button_alpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:onClick="onAlphaClicked"
         android:text="@string/alpha"
         app:layout_constraintEnd_toStartOf="@+id/button_rotation"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_scale"
-        app:layout_constraintTop_toBottomOf="@+id/button_translate_y"
-        android:onClick="onAlphaClicked"/>
+        app:layout_constraintTop_toBottomOf="@+id/button_translate_y" />
 
     <Button
         android:id="@+id/button_rotation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:onClick="onRotationClicked"
         android:text="@string/rotate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_alpha"
-        app:layout_constraintTop_toBottomOf="@+id/button_translate_y"
-        android:onClick="onRotationClicked"/>
+        app:layout_constraintTop_toBottomOf="@+id/button_translate_y" />
 
     <Button
         android:id="@+id/button_translate_y"
@@ -63,12 +63,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:onClick="onTranslateYClicked"
         android:text="@string/translate_y"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_translate_x"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="onTranslateYClicked"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/divider_top"

@@ -66,9 +66,10 @@ public class MainActivity extends AppCompatActivity {
                 textWidth.setText(String.format("%d px", boxView.getWidth()));
                 textStatus.setText(boxView.getBoxStatusName());
                 textAlpha.setText(String.format("%d%%", boxView.getAlphaAsPercent()));
-                textScale.setText(String.format("%.1f x", boxView.getScale()));
+                textScale.setText(String.format("%.1f x", boxView.getScaleFactor()));
 
                 boxView.calcXTranslationPoints(parentLayout);
+                boxView.calcYTranslationPoints(dividerTop, dividerBottom);
             }
         });
     }
@@ -86,14 +87,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTranslateYClicked(View view) {
+        float moveToY = boxView.moveToY();
 
-    }
+        boxView.setBoxStatus(BoxStatus.MOVING_Y);
 
-    public void onAlphaClicked(View view) {
-
+        boxView.animate()
+                .setDuration(DURATION)
+                .withStartAction(animateStartAction())
+                .y(moveToY)
+                .setUpdateListener(animateUpdate())
+                .withEndAction(animateEndAction());
     }
 
     public void onScaleClicked(View view) {
+        float scaleFactor = boxView.getScaleFactor();
+
+        boxView.setBoxStatus(BoxStatus.SCALE_UP);
+
+        // We'll need to recalculate our translation points since the
+        // size of the box has been updated.
+        boxView.calcXTranslationPoints(parentLayout);
+        boxView.calcYTranslationPoints(dividerTop, dividerBottom);
+
+        boxView.animate()
+                .setDuration(DURATION)
+                .withStartAction(animateStartAction())
+                .scaleX(scaleFactor)
+                .scaleY(scaleFactor)
+                .setUpdateListener(animateUpdate())
+                .withEndAction(animateEndAction());
+    }
+
+    public void onAlphaClicked(View view) {
 
     }
 

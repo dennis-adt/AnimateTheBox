@@ -4,14 +4,19 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup.MarginLayoutParams;
 
 public class BoxView extends View {
 
-    private static final int TOP = 0;
+    private static final int MOVE_TOP = 0;
     private static final int RIGHT = 1;
-    private static final int BOTTOM = 2;
+    private static final int MOVE_BOTTOM = 2;
     private static final int LEFT = 3;
-    private static final int CENTER = 4;
+    private static final int MOVE_CENTER = 4;
+
+    private static final int SCALE_SMALL = 0;
+    private static final int SCALE_NORMAL = 1;
+    private static final int SCALE_LARGE = 2;
 
     private int minXTranslation = 0;
     private int midXTranslation = 0;
@@ -22,7 +27,7 @@ public class BoxView extends View {
     private int maxYTranslation = 0;
 
     private float alpha = 1.0f;
-    private float scale = 1.0f;
+    private float scaleFactor = 1.0f;
 
     // We start off with our box in the center of the stage. The initial direction of movement
     // will be towards the right side of the stage for the x-axis, and towards the bottom of the stage
@@ -32,14 +37,17 @@ public class BoxView extends View {
     private int curXTranslationPoint;
     private int curYTranslationPoint;
 
-    enum BoxStatus {STATIONARY, MOVING_X, MOVING_Y, SCALE_UP, SCALE_DOWN, ROTATE_LEFT, ROTATE_RIGHT, FADE_IN, FADE_OUT}
+    private int prevScalePoint;
+    private int currScalePoint;
 
+
+    enum BoxStatus {STATIONARY, MOVING_X, MOVING_Y, SCALE_UP, SCALE_DOWN, ROTATE_LEFT, ROTATE_RIGHT, FADE_IN, FADE_OUT;}
     private BoxStatus boxStatus = BoxStatus.STATIONARY;
+
     public BoxView(Context context) {
         super(context);
         init();
     }
-
     public BoxView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -57,9 +65,20 @@ public class BoxView extends View {
 
     private void init() {
         prevXTranslationPoint = LEFT;
-        prevYTranslationPoint = TOP;
-        curXTranslationPoint = CENTER;
-        curYTranslationPoint = CENTER;
+        prevYTranslationPoint = MOVE_TOP;
+        curXTranslationPoint = MOVE_CENTER;
+        curYTranslationPoint = MOVE_CENTER;
+
+        prevScalePoint = SCALE_SMALL;
+        currScalePoint = SCALE_NORMAL;
+    }
+
+    private int getScaleWidth() {
+        return (int) (getWidth() * scaleFactor);
+    }
+
+    private int getScaleHeight() {
+        return (int) (getHeight() * scaleFactor);
     }
 
     /**
@@ -106,6 +125,24 @@ public class BoxView extends View {
         minXTranslation = paddingLeft;
     }
 
+    public void calcYTranslationPoints(View topBarrier, View bottomBarrier) {
+        int topBarrierY = (int)topBarrier.getY();
+        int bottomBarrierY = (int)bottomBarrier.getY();
+
+        int topBarrierHeight = topBarrier.getHeight();
+        int boxHeight = getHeight();
+
+        MarginLayoutParams topLayoutParams = (MarginLayoutParams) topBarrier.getLayoutParams();
+        MarginLayoutParams bottomLayoutParams = (MarginLayoutParams) bottomBarrier.getLayoutParams();
+
+        int topBarrierBottomMargin = topLayoutParams.bottomMargin;
+        int bottomBarrierTopMargin = bottomLayoutParams.topMargin;
+
+        minYTranslation = topBarrierY + topBarrierHeight + topBarrierBottomMargin;
+        maxYTranslation = bottomBarrierY - bottomBarrierTopMargin - boxHeight;
+        midYTranslation = ((maxYTranslation - minYTranslation) / 2) + minYTranslation;
+    }
+
     /**
      * Set the x-coord the box should move to inside the layout based on its current position and its
      * previous position.
@@ -119,25 +156,54 @@ public class BoxView extends View {
             case LEFT:
                 moveToX = midXTranslation;
                 prevXTranslationPoint = LEFT;
-                curXTranslationPoint = CENTER;
+                curXTranslationPoint = MOVE_CENTER;
                 break;
 
-            case CENTER:
+            case MOVE_CENTER:
                 // If we came from the LEFT in the last move, then we want to move RIGHT this time,
                 // and vice versa.
-                moveToX = prevXTranslationPoint == LEFT ? maxXTranslation : 0;
+                moveToX = prevXTranslationPoint == LEFT ? maxXTranslation : minXTranslation;
                 curXTranslationPoint = prevXTranslationPoint == LEFT ? RIGHT : LEFT;
-                prevXTranslationPoint = CENTER;
+                prevXTranslationPoint = MOVE_CENTER;
                 break;
 
             case RIGHT:
                 moveToX = midXTranslation;
                 prevXTranslationPoint = RIGHT;
-                curXTranslationPoint = CENTER;
+                curXTranslationPoint = MOVE_CENTER;
         }
 
         return moveToX;
     }
+
+    public float moveToY() {
+        float moveToY = 0;
+
+        switch (curYTranslationPoint) {
+            case MOVE_TOP:
+                moveToY = midYTranslation;
+                prevYTranslationPoint = MOVE_TOP;
+                curYTranslationPoint = MOVE_CENTER;
+                break;
+
+            case MOVE_CENTER:
+                // If we came from the MOVE_TOP in the last move, then we want to move MOVE_BOTTOM this time,
+                // and vice versa.
+                moveToY = prevYTranslationPoint == MOVE_TOP ? maxYTranslation : minYTranslation;
+                curYTranslationPoint = prevYTranslationPoint == MOVE_TOP ? MOVE_BOTTOM : MOVE_TOP;
+                prevYTranslationPoint = MOVE_CENTER;
+                break;
+
+            case MOVE_BOTTOM:
+                moveToY = midYTranslation;
+                prevYTranslationPoint = MOVE_BOTTOM;
+                curYTranslationPoint = MOVE_CENTER;
+        }
+
+        return moveToY;
+    }
+
+
 
     public String getBoxStatusName() {
         return boxStatus.name();
@@ -151,7 +217,28 @@ public class BoxView extends View {
         return (int) (alpha * 100);
     }
 
-    public float getScale() {
-        return scale;
+    public float getScaleFactor() {
+
+        switch (currScalePoint) {
+            case SCALE_SMALL:
+                prevScalePoint = SCALE_SMALL;
+                currScalePoint = SCALE_NORMAL;
+                scaleFactor = 1.0f;
+                break;
+
+            case SCALE_NORMAL:
+                scaleFactor = prevScalePoint == SCALE_SMALL ? 2.0f : 0.5f;
+                currScalePoint = prevScalePoint == SCALE_SMALL ? SCALE_LARGE : SCALE_SMALL;
+                prevScalePoint = SCALE_NORMAL;
+                break;
+
+            case SCALE_LARGE:
+                prevScalePoint = SCALE_LARGE;
+                currScalePoint = SCALE_NORMAL;
+                scaleFactor = 1.0f;
+                break;
+        }
+
+        return scaleFactor;
     }
 }
