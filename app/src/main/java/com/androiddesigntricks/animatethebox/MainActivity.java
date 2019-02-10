@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTranslateXClicked(View view) {
-        float moveToX = boxView.moveToX();
+        float moveToX = boxView.getXToMove();
         boxView.setBoxStatus(BoxStatus.MOVING_X);
 
         boxView.animate()
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTranslateYClicked(View view) {
-        float moveToY = boxView.moveToY();
+        float moveToY = boxView.getYToMove();
 
         boxView.setBoxStatus(BoxStatus.MOVING_Y);
 
@@ -99,15 +99,18 @@ public class MainActivity extends AppCompatActivity {
                 .withEndAction(animateEndAction());
     }
 
+    @SuppressLint("DefaultLocale")
     public void onScaleClicked(View view) {
-        float scaleFactor = boxView.getScaleFactor();
+        float scaleFactor = boxView.getFactorToScale();
 
-        boxView.setBoxStatus(BoxStatus.SCALE_UP);
+        textScale.setText(String.format("%2.1fx", boxView.getScaleFactor()));
+        textWidth.setText(String.format("%d px", boxView.getScaleWidth()));
 
-        // We'll need to recalculate our translation points since the
-        // size of the box has been updated.
-        boxView.calcXTranslationPoints(parentLayout);
-        boxView.calcYTranslationPoints(dividerTop, dividerBottom);
+        boxView.setBoxStatus(BoxStatus.SCALING);
+
+        // We'll need to recalculate our translation points since the size of the box has been updated.
+        //boxView.calcXTranslationPoints(parentLayout);
+        //boxView.calcYTranslationPoints(dividerTop, dividerBottom);
 
         boxView.animate()
                 .setDuration(DURATION)
@@ -118,12 +121,29 @@ public class MainActivity extends AppCompatActivity {
                 .withEndAction(animateEndAction());
     }
 
+    @SuppressLint("DefaultLocale")
     public void onAlphaClicked(View view) {
+        float alphaFactor = boxView.getAlphaToChange();
 
+        textAlpha.setText(String.format("%d%%", boxView.getAlphaAsPercent()));
+
+        boxView.animate()
+                .setDuration(DURATION)
+                .withStartAction(animateStartAction())
+                .alpha(alphaFactor)
+                .setUpdateListener(animateUpdate())
+                .withEndAction(animateEndAction());
     }
 
     public void onRotationClicked(View view) {
+        float rotationAngle = boxView.getAngleToRotate();
 
+        boxView.animate()
+                .setDuration(DURATION)
+                .withStartAction(animateStartAction())
+                .rotation(rotationAngle)
+                .setUpdateListener(animateUpdate())
+                .withEndAction(animateEndAction());
     }
 
     public Runnable animateStartAction() {
@@ -147,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ValueAnimator.AnimatorUpdateListener animateUpdate() {
         return new ValueAnimator.AnimatorUpdateListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 textTranslationX.setText(String.format("%d px", boxView.getXLocationInWindow()));

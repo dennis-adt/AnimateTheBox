@@ -8,15 +8,23 @@ import android.view.ViewGroup.MarginLayoutParams;
 
 public class BoxView extends View {
 
+    private static final String TAG = "BoxView";
+
     private static final int MOVE_TOP = 0;
     private static final int RIGHT = 1;
     private static final int MOVE_BOTTOM = 2;
     private static final int LEFT = 3;
     private static final int MOVE_CENTER = 4;
 
-    private static final int SCALE_SMALL = 0;
-    private static final int SCALE_NORMAL = 1;
-    private static final int SCALE_LARGE = 2;
+    private static final float SCALE_SMALL = 0.5f;
+    private static final float SCALE_NORMAL = 1.0f;
+    private static final float SCALE_LARGE = 2.0f;
+
+    private static final float ALPHA_TRANSPARENT = 0.2f;
+    private static final float ALPHA_OPAQUE = 1.0f;
+
+    private static final float ROTATION_CLOCKWISE = 360.0f;
+    private static final float ROTATION_COUNTER_CLOCKWISE = -360.0f;
 
     private int minXTranslation = 0;
     private int midXTranslation = 0;
@@ -27,7 +35,7 @@ public class BoxView extends View {
     private int maxYTranslation = 0;
 
     private float alpha = 1.0f;
-    private float scaleFactor = 1.0f;
+    private float scaleFactor = SCALE_NORMAL;
 
     // We start off with our box in the center of the stage. The initial direction of movement
     // will be towards the right side of the stage for the x-axis, and towards the bottom of the stage
@@ -37,17 +45,21 @@ public class BoxView extends View {
     private int curXTranslationPoint;
     private int curYTranslationPoint;
 
-    private int prevScalePoint;
-    private int currScalePoint;
+    private float prevScalePoint;
+    private float currScalePoint;
 
+    private boolean isAlphaTransparent;
+    private boolean isRotationClockwise;
 
-    enum BoxStatus {STATIONARY, MOVING_X, MOVING_Y, SCALE_UP, SCALE_DOWN, ROTATE_LEFT, ROTATE_RIGHT, FADE_IN, FADE_OUT;}
+    enum BoxStatus {STATIONARY, MOVING_X, MOVING_Y, SCALING, ROTATING, ALPHA;}
+
     private BoxStatus boxStatus = BoxStatus.STATIONARY;
 
     public BoxView(Context context) {
         super(context);
         init();
     }
+
     public BoxView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -71,13 +83,16 @@ public class BoxView extends View {
 
         prevScalePoint = SCALE_SMALL;
         currScalePoint = SCALE_NORMAL;
+
+        isAlphaTransparent = false;
+        isRotationClockwise = false;
     }
 
-    private int getScaleWidth() {
+    public int getScaleWidth() {
         return (int) (getWidth() * scaleFactor);
     }
 
-    private int getScaleHeight() {
+    public int getScaleHeight() {
         return (int) (getHeight() * scaleFactor);
     }
 
@@ -126,8 +141,8 @@ public class BoxView extends View {
     }
 
     public void calcYTranslationPoints(View topBarrier, View bottomBarrier) {
-        int topBarrierY = (int)topBarrier.getY();
-        int bottomBarrierY = (int)bottomBarrier.getY();
+        int topBarrierY = (int) topBarrier.getY();
+        int bottomBarrierY = (int) bottomBarrier.getY();
 
         int topBarrierHeight = topBarrier.getHeight();
         int boxHeight = getHeight();
@@ -149,7 +164,7 @@ public class BoxView extends View {
      *
      * @return The translation point in pixels the box should move to inside the layout along the x-axis
      */
-    public float moveToX() {
+    public float getXToMove() {
         float moveToX = 0;
 
         switch (curXTranslationPoint) {
@@ -176,7 +191,7 @@ public class BoxView extends View {
         return moveToX;
     }
 
-    public float moveToY() {
+    public float getYToMove() {
         float moveToY = 0;
 
         switch (curYTranslationPoint) {
@@ -204,6 +219,51 @@ public class BoxView extends View {
     }
 
 
+    public float getFactorToScale() {
+
+        if (currScalePoint == SCALE_SMALL) {
+            prevScalePoint = SCALE_SMALL;
+            currScalePoint = SCALE_NORMAL;
+            scaleFactor = SCALE_NORMAL;
+        } else if (currScalePoint == SCALE_NORMAL) {
+            scaleFactor = prevScalePoint == SCALE_SMALL ? SCALE_LARGE : SCALE_SMALL;
+            currScalePoint = prevScalePoint == SCALE_SMALL ? SCALE_LARGE : SCALE_SMALL;
+            prevScalePoint = SCALE_NORMAL;
+        } else if (currScalePoint == SCALE_LARGE) {
+            prevScalePoint = SCALE_LARGE;
+            currScalePoint = SCALE_NORMAL;
+            scaleFactor = SCALE_NORMAL;
+        }
+
+        return scaleFactor;
+    }
+
+    public float getAlphaToChange() {
+
+        if (isAlphaTransparent) {
+            alpha = ALPHA_OPAQUE;
+        } else {
+            alpha = ALPHA_TRANSPARENT;
+        }
+
+        isAlphaTransparent = !isAlphaTransparent;
+
+        return alpha;
+    }
+
+    public float getAngleToRotate() {
+        float rotation;
+
+        if (isRotationClockwise) {
+            rotation = ROTATION_COUNTER_CLOCKWISE;
+        } else {
+            rotation = ROTATION_CLOCKWISE;
+        }
+
+        isRotationClockwise = !isRotationClockwise;
+
+        return rotation;
+    }
 
     public String getBoxStatusName() {
         return boxStatus.name();
@@ -218,27 +278,6 @@ public class BoxView extends View {
     }
 
     public float getScaleFactor() {
-
-        switch (currScalePoint) {
-            case SCALE_SMALL:
-                prevScalePoint = SCALE_SMALL;
-                currScalePoint = SCALE_NORMAL;
-                scaleFactor = 1.0f;
-                break;
-
-            case SCALE_NORMAL:
-                scaleFactor = prevScalePoint == SCALE_SMALL ? 2.0f : 0.5f;
-                currScalePoint = prevScalePoint == SCALE_SMALL ? SCALE_LARGE : SCALE_SMALL;
-                prevScalePoint = SCALE_NORMAL;
-                break;
-
-            case SCALE_LARGE:
-                prevScalePoint = SCALE_LARGE;
-                currScalePoint = SCALE_NORMAL;
-                scaleFactor = 1.0f;
-                break;
-        }
-
         return scaleFactor;
     }
 }
