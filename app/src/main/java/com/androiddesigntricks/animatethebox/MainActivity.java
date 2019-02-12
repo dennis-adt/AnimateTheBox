@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private BoxView boxView;
     private TextView textTranslationX;
     private TextView textTranslationY;
+    private TextView textTranslationZ;
     private TextView textAlpha;
     private TextView textScale;
     private TextView textWidth;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         boxView = findViewById(R.id.view_box);
         textTranslationX = findViewById(R.id.text_translation_x);
         textTranslationY = findViewById(R.id.text_translation_y);
+        textTranslationZ = findViewById(R.id.text_translation_z);
         textAlpha = findViewById(R.id.text_alpha);
         textScale = findViewById(R.id.text_scale);
         textWidth = findViewById(R.id.text_width);
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 // Update our stats about the box on the layout.
                 textTranslationX.setText(String.format("%d px", boxView.getXLocationInWindow()));
                 textTranslationY.setText(String.format("%d px", boxView.getYLocationInWindow()));
+                textTranslationZ.setText(String.format("%d px", boxView.getZElevation()));
                 textWidth.setText(String.format("%d px", boxView.getWidth()));
                 textStatus.setText(boxView.getBoxStatusName());
                 textAlpha.setText(String.format("%d%%", boxView.getAlphaAsPercent()));
@@ -84,6 +87,19 @@ public class MainActivity extends AppCompatActivity {
                 .setDuration(DURATION)
                 .withStartAction(animateStartAction())
                 .y(moveToY)
+                .setUpdateListener(animateUpdate())
+                .withEndAction(animateEndAction());
+    }
+
+    public void onTranslateZClicked(View view) {
+        int elevation = boxView.getNextElevationLevel();
+
+        boxView.setBoxStatus(BoxStatus.MOVING_Z);
+
+        boxView.animate()
+                .setDuration(DURATION)
+                .withStartAction(animateStartAction())
+                .z(elevation)
                 .setUpdateListener(animateUpdate())
                 .withEndAction(animateEndAction());
     }
@@ -160,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationUpdate(ValueAnimator animation) {
                 textTranslationX.setText(String.format("%d px", boxView.getXLocationInWindow()));
                 textTranslationY.setText(String.format("%d px", boxView.getYLocationInWindow()));
+                textTranslationZ.setText(String.format("%d px", boxView.getZElevation()));
             }
         };
     }

@@ -30,6 +30,8 @@ public class BoxView extends View {
     private static final int LEFT = 3;
     private static final int MOVE_CENTER = 4;
 
+    private static final int ELEVATION_LEVEL = 40;
+
     private static final float SCALE_SMALL = 0.5f;
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_LARGE = 2.0f;
@@ -48,6 +50,8 @@ public class BoxView extends View {
     private int midYTranslation = 0;
     private int maxYTranslation = 0;
 
+    private int zElevation = 0;
+
     private float alphaFactor = 1.0f;
     private float scaleFactor = SCALE_NORMAL;
 
@@ -61,8 +65,9 @@ public class BoxView extends View {
 
     private boolean isAlphaTransparent;
     private boolean isRotationClockwise;
+    private boolean isElevated;
 
-    enum BoxStatus {STATIONARY, MOVING_X, MOVING_Y, SCALING, ROTATING, ALPHA;}
+    enum BoxStatus {STATIONARY, MOVING_X, MOVING_Y, MOVING_Z, SCALING, ROTATING, ALPHA;}
 
     private BoxStatus boxStatus = BoxStatus.STATIONARY;
 
@@ -97,6 +102,7 @@ public class BoxView extends View {
 
         isAlphaTransparent = false;
         isRotationClockwise = false;
+        isElevated = false;
     }
 
     /**
@@ -123,6 +129,14 @@ public class BoxView extends View {
         getLocationInWindow(outLocation);
 
         return outLocation[1];
+    }
+
+    /**
+     * Returns the elevation of the box in the z-axis.
+     * @return The elevation of the box in the z-axis.
+     */
+    public int getZElevation() {
+        return zElevation;
     }
 
     /**
@@ -235,6 +249,22 @@ public class BoxView extends View {
         }
 
         return moveToY;
+    }
+
+    /**
+     * Gets the elevation level to move the box to, and then toggles the elevation flag.
+     * @return The elevation level to move the box to.
+     */
+    public int getNextElevationLevel() {
+        if (isElevated) {
+            zElevation = 0;
+        } else {
+            zElevation = ELEVATION_LEVEL;
+        }
+
+        isElevated = !isElevated;
+
+        return zElevation;
     }
 
     /**
