@@ -19,6 +19,29 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/button_translate_y"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="onTranslateYClicked"
+        android:text="@string/translate_y"
+        app:layout_constraintEnd_toStartOf="@+id/button_translate_z"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_translate_x"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_translate_z"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/translate_z"
+        app:layout_constraintEnd_toStartOf="@+id/button_scale"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_translate_y"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
         android:id="@+id/button_scale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,13 +50,13 @@
         android:text="@string/scale"
         app:layout_constraintEnd_toStartOf="@+id/button_alpha"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button_translate_y"
+        app:layout_constraintStart_toEndOf="@+id/button_translate_z"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_alpha"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:onClick="onAlphaClicked"
         android:text="@string/alpha"
@@ -54,17 +77,17 @@
         app:layout_constraintStart_toEndOf="@+id/button_alpha"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_translate_y"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <View
+        android:id="@+id/divider_top"
+        android:layout_width="715dp"
+        android:layout_height="4dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:onClick="onTranslateYClicked"
-        android:text="@string/translate_y"
-        app:layout_constraintEnd_toStartOf="@+id/button_scale"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button_translate_x"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginEnd="8dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_status" />
 
     <com.androiddesigntricks.animatethebox.BoxView
         android:id="@+id/view_box"
@@ -76,6 +99,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider_top" />
+
+    <View
+        android:id="@+id/divider_bottom"
+        android:layout_width="715dp"
+        android:layout_height="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/text_translation_z"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/label_x"
@@ -99,14 +134,59 @@
         app:layout_constraintEnd_toEndOf="@+id/label_x" />
 
     <TextView
-        android:id="@+id/label_alpha"
+        android:id="@+id/label_z"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:text="@string/z_label"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/label_alpha"
+        app:layout_constraintEnd_toEndOf="@+id/label_alpha" />
+
+    <TextView
+        android:id="@+id/label_alpha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/alpha_label"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/label_scale"
-        app:layout_constraintEnd_toEndOf="@+id/label_scale" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+    <TextView
+        android:id="@+id/label_scale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/scale_label"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/label_width"
+        app:layout_constraintEnd_toEndOf="@+id/label_width" />
+
+    <TextView
+        android:id="@+id/label_width"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/width_label"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline" />
+
+    <TextView
+        android:id="@+id/label_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/status_label"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/text_status"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_translate_y" />
 
     <TextView
         android:id="@+id/text_translation_x"
@@ -133,6 +213,17 @@
         tools:text="8888 px" />
 
     <TextView
+        android:id="@+id/text_translation_z"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="8888 px"
+        app:layout_constraintBaseline_toBaselineOf="@+id/label_z"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/label_z" />
+
+    <TextView
         android:id="@+id/text_alpha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -145,17 +236,6 @@
         tools:text="100 %" />
 
     <TextView
-        android:id="@+id/label_scale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/scale_label"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline2" />
-
-    <TextView
         android:id="@+id/text_scale"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -163,26 +243,9 @@
         android:layout_marginEnd="8dp"
         android:text="2.0 x"
         app:layout_constraintBaseline_toBaselineOf="@+id/label_scale"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/label_scale"
         tools:text="2.0 x" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33" />
-
-    <TextView
-        android:id="@+id/label_width"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/width_label"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/label_status"
-        app:layout_constraintEnd_toEndOf="@+id/label_status" />
 
     <TextView
         android:id="@+id/text_width"
@@ -197,52 +260,17 @@
         tools:text="1000 px" />
 
     <TextView
-        android:id="@+id/label_status"
+        android:id="@+id/text_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/status_label"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline" />
-
-    <TextView
-        android:id="@+id/text_status"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:text="STATIONARY"
+        android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/label_status"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/label_status"
         tools:text="STATIONARY" />
-
-    <View
-        android:id="@+id/divider_top"
-        android:layout_width="715dp"
-        android:layout_height="4dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_scale" />
-
-    <View
-        android:id="@+id/divider_bottom"
-        android:layout_width="715dp"
-        android:layout_height="4dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/label_alpha"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -250,5 +278,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.66484267" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="242dp" />
 
 </android.support.constraint.ConstraintLayout>
